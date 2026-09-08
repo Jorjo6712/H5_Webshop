@@ -19,7 +19,7 @@ from DTOs import RegisterUserDTO
 
 
 app = Flask(__name__)
-app.config["JWT_SECRET_KEY"] = "super-secret"
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 # Connection configuration
@@ -105,7 +105,10 @@ def login():
 
         if user and bcrypt.checkpw(password.encode(encoding="UTF-8"), user.password_hash.encode(encoding="UTF-8")):
 
-            return redirect("/inventory")
+            return {
+                "access_token": access_token,
+                "refresh_token": refresh_token
+            }, 200
 
         return "Invalid username or password"
 
@@ -113,6 +116,7 @@ def login():
 
 
 @app.route("/inventory")
+@jwt_required()
 def inventory():
 
     with Session(engine) as session:
