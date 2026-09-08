@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app:delegated
+    environment:
+      PYTHONUNBUFFERED: "1"
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_NAME: ${DB_NAME:-webshop}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-student}
