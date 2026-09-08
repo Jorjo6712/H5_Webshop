@@ -5,10 +5,15 @@ import os
 import bcrypt
 from flask import Flask, request, redirect, render_template
 from collections.abc import Mapping
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+    jwt_required,
+    JWTManager,
+    set_access_cookies,
+    set_refresh_cookies
+)
 from werkzeug.security import check_password_hash
 
 from bcrypt import hashpw
@@ -20,6 +25,9 @@ from DTOs import RegisterUserDTO
 
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+app.config["JWT_COOKIE_HTTPONLY"] = True
+app.config["JWT_COOKIE_SECURE"] = False
 jwt = JWTManager(app)
 
 # Connection configuration
@@ -105,10 +113,15 @@ def login():
 
         if user and bcrypt.checkpw(password.encode(encoding="UTF-8"), user.password_hash.encode(encoding="UTF-8")):
 
-            return {
-                "access_token": access_token,
-                "refresh_token": refresh_token
-            }, 200
+            access_token = create_access_token(identity=str(user.id))
+            refresh_token = create_refresh_token(identity=str(user.id))
+
+            response = redirect("/inventory")
+
+            set_access_cookies(response, access_token)
+            set_refresh_cookies(response, refresh_token)
+
+            return response
 
         return "Invalid username or password"
 
@@ -152,6 +165,22 @@ def inventory():
 
     return html
 
+@app.route("/refresh", methods=["POST"])
+@jwt_required(refresh=True)
+def refresh():
+    current_user_id = get_jwt_identity()
+
+    access_token = create_access_token(
+        identity=current_user_id
+    )
+
+    response = {
+        "message": "Access token refreshed"
+    }
+
+    set_access_cookies(response, access_token)
+
+    return response
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
