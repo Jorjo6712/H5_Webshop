@@ -12,7 +12,7 @@ from flask_jwt_extended import JWTManager
 from werkzeug.security import check_password_hash
 
 from bcrypt import hashpw
-from sqlalchemy import create_engine, select, Insert
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 import templates
 from DTOs import RegisterUserDTO
@@ -27,7 +27,6 @@ DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-
 
 # SQLAlchemy bruger stadig psycopg som PostgreSQL driver
 DATABASE_URL = (
@@ -84,7 +83,7 @@ def register():
 
             with Session(engine) as session:
                 user.username = userDto.username
-                user.password_hash = hashpw(userDto.password.encode(encoding="UTF-8"), bcrypt.gensalt())
+                user.password_hash = hashpw(userDto.password.encode(encoding="UTF-8"), bcrypt.gensalt()).decode(encoding="UTF-8")
                 session.add(user)
                 session.commit()
 
@@ -94,6 +93,7 @@ def register():
 def login():
 
     if request.method == "POST":
+        print(DB_NAME)
         username = request.form["username"]
         password = request.form["password"]
 
