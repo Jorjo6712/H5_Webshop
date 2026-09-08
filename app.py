@@ -1,5 +1,6 @@
 from operator import add
 from pickle import GET
+import os
 
 import bcrypt
 from flask import Flask, request, redirect, render_template
@@ -22,10 +23,10 @@ app.config["JWT_SECRET_KEY"] = "super-secret"
 jwt = JWTManager(app)
 
 # Connection configuration
-DB_HOST = "10.40.163.95"
-DB_NAME = "webshop"
-DB_USER = "postgres"
-DB_PASSWORD = "student"
+DB_HOST = os.getenv("DB_HOST")
+DB_NAME = os.getenv("DB_NAME")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
 
 
 # SQLAlchemy bruger stadig psycopg som PostgreSQL driver
