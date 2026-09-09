@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, redirect
 from flask_jwt_extended import JWTManager
 
@@ -5,6 +7,7 @@ from config import Config
 from routes.auth import auth_bp
 from routes.web import web_bp
 
+print(os.getenv("DB_HOST"))
 
 def create_app():
 

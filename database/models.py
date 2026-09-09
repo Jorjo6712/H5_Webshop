@@ -9,3 +9,13 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str]
     password_hash: Mapped[str]
+
+
+class Article(Base):
+    __tablename__ = "articles"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    article_number: Mapped[str]
+    name: Mapped[str]
+    price: Mapped[float]
+    quantity_on_hand: Mapped[int]
