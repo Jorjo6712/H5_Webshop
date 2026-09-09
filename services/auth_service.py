@@ -2,7 +2,7 @@ import bcrypt
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from database.models import User
+from database.models.user import User
 from dtos.user_dto import UserDTO
 
 

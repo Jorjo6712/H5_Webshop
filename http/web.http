@@ -1,0 +1,17 @@
+### Home
+GET http://localhost:5000/
+
+
+### Register page
+GET http://localhost:5000/register
+
+
+### Login page
+GET http://localhost:5000/login
+
+
+### Checkout
+POST http://localhost:5000/checkout
+Content-Type: application/x-www-form-urlencoded
+
+product_id=1&quantity=1

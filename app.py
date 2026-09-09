@@ -6,6 +6,8 @@ from flask_jwt_extended import JWTManager
 from config import Config
 from routes.auth import auth_bp
 from routes.web import web_bp
+from routes.orders import orders_bp
+from routes.b2b import b2b_bp
 
 print(os.getenv("DB_HOST"))
 
@@ -27,6 +29,8 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(web_bp)
+    app.register_blueprint(orders_bp)
+    app.register_blueprint(b2b_bp)
 
     return app
 

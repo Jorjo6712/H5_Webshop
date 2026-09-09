@@ -1,0 +1,56 @@
+### Create B2B client
+POST http://localhost:5000/api/b2b/clients
+Content-Type: application/json
+
+{
+    "company_name": "Test Electronics ApS"
+}
+
+### B2B order
+POST http://localhost:5000/api/b2b/orders
+X-API-Key: WgBco50r28FCZRP58dZwYQyFNeYRzddqThZ6oKdvkTA
+X-API-Secret: JqVETr9cxSyGC5NQsq_9YyivarGXNsqtLLVcx3b9rY7nTCT2eNTwRLMEXkX55NqN
+Content-Type: application/json
+
+{
+    "items": [
+        {
+            "product_id": 1,
+            "quantity": 10
+        }
+    ]
+}
+
+### B2B order - multiple products
+POST http://localhost:5000/api/b2b/orders
+X-API-Key: YOUR_API_KEY
+X-API-Secret: YOUR_API_SECRET
+Content-Type: application/json
+
+{
+    "items": [
+        {
+            "product_id": 1,
+            "quantity": 10
+        },
+        {
+            "product_id": 2,
+            "quantity": 5
+        }
+    ]
+}
+
+### B2B order - invalid credentials
+POST http://localhost:5000/api/b2b/orders
+X-API-Key: invalid-key
+X-API-Secret: invalid-secret
+Content-Type: application/json
+
+{
+    "items": [
+        {
+            "product_id": 1,
+            "quantity": 1
+        }
+    ]
+}

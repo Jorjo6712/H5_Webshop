@@ -1,0 +1,16 @@
+### Register user
+POST http://localhost:5000/register
+Content-Type: application/x-www-form-urlencoded
+
+username=testuser&password=Password123!
+
+
+### Login
+POST http://localhost:5000/login
+Content-Type: application/x-www-form-urlencoded
+
+username=testuser&password=Password123!
+
+
+### Refresh access token
+POST http://localhost:5000/refresh
