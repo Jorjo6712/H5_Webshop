@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from database.models import User
-from DTOs.user_dto import User_DTO
+from dtos.user_dto import UserDTO
 
 
 class AuthService:
@@ -11,7 +11,7 @@ class AuthService:
     def __init__(self, session: Session):
         self.session = session
 
-    def register_user(self, dto: User_DTO) -> User:
+    def register_user(self, dto: UserDTO) -> User:
         password_hash = bcrypt.hashpw(
             dto.password.encode("UTF-8"),
             bcrypt.gensalt()

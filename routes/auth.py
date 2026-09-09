@@ -8,7 +8,7 @@ from flask_jwt_extended import (
     get_jwt_identity
 )
 
-from DTOs.user_dto import User_DTO
+from dtos.user_dto import UserDTO
 from database.connection import get_session
 from services.auth_service import AuthService
 
@@ -21,7 +21,7 @@ def register():
 
     if request.method == "POST":
 
-        dto = User_DTO(
+        dto = UserDTO(
             username=request.form["username"],
             password=request.form["password"]
         )

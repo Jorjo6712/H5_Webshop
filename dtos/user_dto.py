@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
 @dataclass
-class User_DTO:
+class UserDTO:
     username: str
     password: str
