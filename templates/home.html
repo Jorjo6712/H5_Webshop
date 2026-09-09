@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webshop</title>
+</head>
+<body>
+        <h1>Server Side Programming</h1>
+        <table border="1">
+    <thead>
+        <tr>
+            <th>Article</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for article in articles %}
+        <tr>
+            <td>{{ article.article_number }}</td>
+            <td>{{ article.name }}</td>
+            <td>{{ article.price }}</td>
+            <td>{{ article.quantity_on_hand }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">No articles found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

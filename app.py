@@ -3,7 +3,7 @@ from pickle import GET
 import os
 
 import bcrypt
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, session
 from collections.abc import Mapping
 from flask_jwt_extended import (
     create_access_token,
@@ -43,7 +43,15 @@ DATABASE_URL = (
 )
 
 engine = create_engine(DATABASE_URL)
+session = Session(engine)
 
+def unauthorized_callback(reason):
+    return redirect("/login")
+def expired_callback(jwt_header, jwt_payload):
+    return redirect("/login")
+
+jwt.unauthorized_loader(unauthorized_callback)
+jwt.expired_token_loader(expired_callback)
 
 # Base class for ORM classes
 class Base(DeclarativeBase):
@@ -58,27 +66,14 @@ class User(Base):
     username: Mapped[str]
     password_hash: Mapped[str]
 
-
-# ORM class der repræsenterer articles tabellen
-class Article(Base):
-    __tablename__ = "articles"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    article_number: Mapped[str]
-    name: Mapped[str]
-    price: Mapped[float]
-    quantity_on_hand: Mapped[int]
-
-
-# Standard route
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
+@jwt_required()
 def home():
-    return """
-        <h1>Server Side Programming</h1>
-        <p><a href="/login">Login</a></p>
-        <p><a href="/register">Register</a></p>
-        <p><a href="/inventory">Inventory</a></p>
-    """
+
+    if request.method == "POST":
+        pass
+
+    return render_template("home.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -89,11 +84,10 @@ def register():
             userDto.password = request.form["password"]
             user = User()
 
-            with Session(engine) as session:
-                user.username = userDto.username
-                user.password_hash = hashpw(userDto.password.encode(encoding="UTF-8"), bcrypt.gensalt()).decode(encoding="UTF-8")
-                session.add(user)
-                session.commit()
+            user.username = userDto.username
+            user.password_hash = hashpw(userDto.password.encode(encoding="UTF-8"), bcrypt.gensalt()).decode(encoding="UTF-8")
+            session.add(user)
+            session.commit()
 
         return render_template("register.html")
 
@@ -105,18 +99,16 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        with Session(engine) as session:
-
-            user = session.scalar(
-                select(User).where(User.username == username)
-            )
+        user = session.scalar(
+            select(User).where(User.username == username)
+        )
 
         if user and bcrypt.checkpw(password.encode(encoding="UTF-8"), user.password_hash.encode(encoding="UTF-8")):
 
             access_token = create_access_token(identity=str(user.id))
             refresh_token = create_refresh_token(identity=str(user.id))
 
-            response = redirect("/inventory")
+            response = redirect("/")
 
             set_access_cookies(response, access_token)
             set_refresh_cookies(response, refresh_token)
@@ -126,44 +118,6 @@ def login():
         return "Invalid username or password"
 
     return render_template("login.html")
-
-
-@app.route("/inventory")
-@jwt_required()
-def inventory():
-
-    with Session(engine) as session:
-
-        articles = session.scalars(
-            select(Article).order_by(Article.article_number)
-        ).all()
-
-    html = """
-        <h1>Inventory</h1>
-
-        <table border="1">
-            <tr>
-                <th>Article</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Stock</th>
-            </tr>
-    """
-
-    # article er nu et Article objekt og ikke en tuple
-    for article in articles:
-        html += f"""
-            <tr>
-                <td>{article.article_number}</td>
-                <td>{article.name}</td>
-                <td>{article.price}</td>
-                <td>{article.quantity_on_hand}</td>
-            </tr>
-        """
-
-    html += "</table>"
-
-    return html
 
 @app.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
@@ -181,6 +135,7 @@ def refresh():
     set_access_cookies(response, access_token)
 
     return response
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
