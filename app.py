@@ -1,6 +1,7 @@
 import os
+from flask import request
 
-from flask import Flask, redirect
+from flask import Flask, redirect, jsonify
 from flask_jwt_extended import JWTManager
 
 from config import Config
@@ -21,10 +22,28 @@ def create_app():
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
+        if request.accept_mimetypes.accept_json:
+            return jsonify({
+                "error": "Authentication token has expired",
+                "reason": reason
+            }), 401
+        return redirect("/login")
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(reason):
+        if request.accept_mimetypes.accept_json:
+            return jsonify({
+                "error": "Invalid authentication token",
+                "reason": reason
+            }), 401
         return redirect("/login")
 
     @jwt.expired_token_loader
-    def expired_callback(jwt_header, jwt_payload):
+    def expired_token_callback(jwt_header, jwt_payload):
+        if request.accept_mimetypes.accept_json:
+            return jsonify({
+                "error": "Authentication token has expired"
+            }), 401
         return redirect("/login")
 
     app.register_blueprint(auth_bp)

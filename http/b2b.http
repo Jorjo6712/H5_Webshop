@@ -1,6 +1,7 @@
 ### Create B2B client
 POST http://localhost:5000/api/b2b/clients
 Content-Type: application/json
+Accept: application/json
 
 {
     "company_name": "Test Electronics ApS"
@@ -11,6 +12,7 @@ POST http://localhost:5000/api/b2b/orders
 X-API-Key: EAETubHHSRXYYwejPGZPYYgMAodeFngFtb-vF9axx6Y
 X-API-Secret: vAmYvKISehtV66JXfZYWTkJS4TwcdH_y6OCDzN96KMLHOntSkY-KHkcMyespciR2
 Content-Type: application/json
+Accept: application/json
 
 {
     "items": [
@@ -26,6 +28,7 @@ POST http://localhost:5000/api/b2b/orders
 X-API-Key: EAETubHHSRXYYwejPGZPYYgMAodeFngFtb-vF9axx6Y
 X-API-Secret: vAmYvKISehtV66JXfZYWTkJS4TwcdH_y6OCDzN96KMLHOntSkY-KHkcMyespciR2
 Content-Type: application/json
+Accept: application/json
 
 {
     "items": [
@@ -45,6 +48,7 @@ POST http://localhost:5000/api/b2b/orders
 X-API-Key: invalid-key
 X-API-Secret: invalid-secret
 Content-Type: application/json
+Accept: application/json
 
 {
     "items": [
