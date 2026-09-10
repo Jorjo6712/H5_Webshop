@@ -1,81 +1,105 @@
-    <!DOCTYPE html>
-    <html lang="en">
-        <meta charset="UTF-8">
-    <head>
-        <title>Webshop</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-    </head>
-    <body>
-        <h1>Electronics Catalog</h1>
+<!doctype html>
+<html lang="en">
+  <meta charset="UTF-8" />
+  <head>
+    <title>Webshop</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/home.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Electronics Catalog</h1>
 
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Article No.</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>In Stock</th>
-                    <th>Order</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for article in articles %}
-                <tr>
-                    <td>{{ article.article_number }}</td>
-                    <td>{{ article.name }}</td>
-                    <td>${{ article.price }}</td>
-                    <td>{{ article.quantity_on_hand }}</td>
-                    <td>
-                        {% if article.quantity_on_hand > 0 %}
-                            <input type="number" id="qty-{{ article.id }}" value="1" min="1" max="{{ article.quantity_on_hand }}" style="width: 50px;">
-                            <button onclick="buyArticle({{ article.id }})">Buy</button>
-                        {% else %}
-                            <span style="color: red;">Out of Stock</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="5">No articles found.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Article No.</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>In Stock</th>
+          <th>Order</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in articles %}
+        <tr>
+          <td>{{ article.article_number }}</td>
+          <td>{{ article.name }}</td>
+          <td>${{ article.price }}</td>
+          <td>{{ article.quantity_on_hand }}</td>
+          <td>
+            {% if article.quantity_on_hand > 0 %}
+            <input
+              type="number"
+              id="qty-{{ article.id }}"
+              value="1"
+              min="1"
+              max="{{ article.quantity_on_hand }}"
+              style="width: 50px"
+            />
+            <button onclick="buyArticle({{ article.id }})">Buy</button>
+            {% else %}
+            <span style="color: red">Out of Stock</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5">No articles found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
-        <script>
-            async function buyArticle(articleId) {
-                const qtyInput = document.getElementById(`qty-${articleId}`);
-                const quantity = parseInt(qtyInput.value, 10);
+    <script>
+      async function buyArticle(articleId) {
+        const qtyInput = document.getElementById(`qty-${articleId}`)
+        const quantity = parseInt(qtyInput.value, 10)
 
-                try {
-                    // Calls your existing routes/orders.py endpoint
-                    const response = await fetch('/api/orders', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        // Matches your CreateOrderDTO and OrderLineDTO:
-                        body: JSON.stringify({
-                            items: [
-                                { article_id: articleId, quantity: quantity }
-                            ]
-                        })
-                    });
+        const csrfToken = getCookie('csrf_access_token')
 
-                    const data = await response.json();
+        try {
+          // Calls your existing routes/orders.py endpoint
+          const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken,
+            },
+            // Matches your CreateOrderDTO and OrderLineDTO:
+            body: JSON.stringify({
+              items: [{ article_id: articleId, quantity: quantity }],
+            }),
+          })
 
-                    if (response.ok) {
-                        alert(`Order created! Order ID: ${data.order_id}`);
-                        // Reload the page to reflect the updated stock in the table
-                        window.location.reload();
-                    } else {
-                        alert(`Error: ${data.error || 'Failed to place order'}`);
-                    }
-                } catch (err) {
-                    console.error(err);
-                    alert("Network error occurred while submitting order.");
-                }
-            }
-        </script>
-    </body>
-    </html>
+          const data = await response.json()
+
+          if (response.ok) {
+            alert(`Order created! Order ID: ${data.order_id}`)
+            // Reload the page to reflect the updated stock in the table
+            window.location.reload()
+          } else {
+            alert(`Error: ${data.error || 'Failed to place order'}`)
+          }
+        } catch (err) {
+          console.error(err)
+          alert('Network error occurred while submitting order.')
+        }
+      }
+      function getCookie(name) {
+        const cookies = document.cookie.split(';')
+
+        for (const cookie of cookies) {
+          const [key, value] = cookie.trim().split('=')
+
+          if (key === name) {
+            return value
+          }
+        }
+
+        return null
+      }
+    </script>
+  </body>
+</html>
