@@ -1,5 +1,10 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc4OTAyODUwNiwianRpIjoiODExNjM5NTYtMTZhZS00ZGRhLWJlNGQtNjg3Y2M4MTliNWI4IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEwIiwibmJmIjoxNzg5MDI4NTA2LCJjc3JmIjoiYWEyODZiYmYtMTBhMi00MzcyLWI1ODEtNjU1NWM3M2IzMjMyIiwiZXhwIjoxNzg5MDI5NDA2fQ.0oVNRjKnUciUK_5VJZKB8OY0d4TcSuGDVDBPdcaVaYw
+@csrfToken = aa286bbf-10a2-4372-b581-6555c73b3232
+
 ### Create normal user order
 POST http://localhost:5000/api/orders
+Cookie: access_token_cookie={{accessToken}}; csrf_access_token={{csrfToken}}
+X-CSRF-TOKEN: {{csrfToken}}
 Content-Type: application/json
 Accept: application/json
 
@@ -23,7 +28,7 @@ Accept: application/json
 {
     "items": [
         {
-            "article_id": 1,
+            "article_id": 3,
             "quantity": 2
         },
         {
@@ -36,13 +41,14 @@ Accept: application/json
 
 ### Get all orders for current user
 GET http://localhost:5000/api/orders
+Content-Type: application/json
 Cookie: access_token_cookie={{accessToken}}; csrf_access_token={{csrfToken}};
 X-CSRF-TOKEN: {{csrfToken}}
 Accept: application/json
 
 
 ### Get specific order
+GET http://localhost:5000/api/orders/7
+Accept: application/json
 Cookie: access_token_cookie={{accessToken}}; csrf_access_token={{csrfToken}};
 X-CSRF-TOKEN: {{csrfToken}}
-GET http://localhost:5000/api/orders/3
-Accept: application/json
