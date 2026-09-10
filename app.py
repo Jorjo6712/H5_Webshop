@@ -23,7 +23,7 @@ def create_app():
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
-        if not request.accept_mimetypes.accept_json:
+        if request.accept_mimetypes.accept_json:
             return jsonify({
                 "error": "Authentication token has expired",
                 "reason": reason
@@ -32,7 +32,7 @@ def create_app():
 
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
-        if not request.accept_mimetypes.accept_json:
+        if request.accept_mimetypes.accept_json:
             return jsonify({
                 "error": "Invalid authentication token",
                 "reason": reason
@@ -41,7 +41,7 @@ def create_app():
 
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_payload):
-        if not request.accept_mimetypes.accept_json:
+        if request.accept_mimetypes.accept_json:
             return jsonify({
                 "error": "Authentication token has expired"
             }), 401
