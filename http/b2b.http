@@ -8,14 +8,14 @@ Content-Type: application/json
 
 ### B2B order
 POST http://localhost:5000/api/b2b/orders
-X-API-Key: WgBco50r28FCZRP58dZwYQyFNeYRzddqThZ6oKdvkTA
-X-API-Secret: JqVETr9cxSyGC5NQsq_9YyivarGXNsqtLLVcx3b9rY7nTCT2eNTwRLMEXkX55NqN
+X-API-Key: EAETubHHSRXYYwejPGZPYYgMAodeFngFtb-vF9axx6Y
+X-API-Secret: vAmYvKISehtV66JXfZYWTkJS4TwcdH_y6OCDzN96KMLHOntSkY-KHkcMyespciR2
 Content-Type: application/json
 
 {
     "items": [
         {
-            "product_id": 1,
+            "article_id": 1,
             "quantity": 10
         }
     ]
@@ -30,11 +30,11 @@ Content-Type: application/json
 {
     "items": [
         {
-            "product_id": 1,
+            "article_id": 1,
             "quantity": 10
         },
         {
-            "product_id": 2,
+            "article_id": 2,
             "quantity": 5
         }
     ]
@@ -49,7 +49,7 @@ Content-Type: application/json
 {
     "items": [
         {
-            "product_id": 1,
+            "article_id": 1,
             "quantity": 1
         }
     ]

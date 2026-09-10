@@ -1,8 +1,12 @@
+from xmlrpc import client
+
+from database.models import order
 from flask import Blueprint, request, jsonify
 
 from database.connection import get_session
 from services.b2b_service import B2BService
 from dtos.order_dto import CreateOrderDTO, OrderLineDTO
+from services.order_service import OrderService
 
 b2b_bp = Blueprint("b2b", __name__)
 
@@ -34,26 +38,43 @@ def create_b2b_order():
 
         data = request.get_json()
 
-        dto = CreateOrderDTO(
-            items=[
-                OrderLineDTO(
-                    article_id=item["article_id"],
-                    quantity=item["quantity"]
-                )
-                for item in data["items"]
-            ]
+        if not data or "items" not in data:
+            return jsonify({
+                "error": "Order items are required"
+            }), 400
+
+        if not isinstance(data["items"], list) or not data["items"]:
+            return jsonify({
+                "error": "Order items must be a non-empty list"
+            }), 400
+
+        try:
+            dto = CreateOrderDTO(
+                items=[
+                    OrderLineDTO(
+                        article_id=item["article_id"],
+                        quantity=item["quantity"]
+                    )
+                    for item in data["items"]
+                ]
+            )
+        except (KeyError, TypeError):
+            return jsonify({
+                "error": "Each item must contain article_id and quantity"
+            }), 400
+
+        order = OrderService(session).create_order(
+            dto=dto,
+            client_id=client.id
         )
 
-        # OrderService will be implemented next.
-        # order = OrderService(session).create_order(
-        #     client.id,
-        #     dto
-        # )
-
         return jsonify({
-            "message": "B2B authentication successful",
-            "company": client.company_name
-        }), 200
+            "message": "B2B order created successfully",
+            "order_id": order.id,
+            "company": client.company_name,
+            "status": order.status,
+            "total_amount": str(order.total_amount)
+        }), 201 
 
 @b2b_bp.route("/api/b2b/clients", methods=["POST"])
 def create_b2b_client():
