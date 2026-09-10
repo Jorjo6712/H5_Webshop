@@ -1,9 +1,11 @@
-from flask import Blueprint, request, render_template
-from flask_jwt_extended import jwt_required
+from flask import Blueprint, request, render_template, redirect
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from database.connection import get_session
+from dtos.order_dto import CreateOrderDTO, OrderLineDTO
 
 from services.article_service import ArticleService
+from services.order_service import OrderService
 
 web_bp = Blueprint("web", __name__)
 
@@ -17,5 +19,3 @@ def home():
         articles = article_service.get_article()
 
     return render_template("home.html", articles=articles)
-
-

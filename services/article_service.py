@@ -12,5 +12,4 @@ class ArticleService:
         articles = self.session.scalars(
             select(Article).order_by(Article.article_number)
         ).all()
-        print(list(articles))
         return list(articles)
