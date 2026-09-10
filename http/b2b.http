@@ -23,8 +23,8 @@ Content-Type: application/json
 
 ### B2B order - multiple products
 POST http://localhost:5000/api/b2b/orders
-X-API-Key: YOUR_API_KEY
-X-API-Secret: YOUR_API_SECRET
+X-API-Key: EAETubHHSRXYYwejPGZPYYgMAodeFngFtb-vF9axx6Y
+X-API-Secret: vAmYvKISehtV66JXfZYWTkJS4TwcdH_y6OCDzN96KMLHOntSkY-KHkcMyespciR2
 Content-Type: application/json
 
 {
