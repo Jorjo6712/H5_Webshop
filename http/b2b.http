@@ -23,7 +23,7 @@ Accept: application/json
     ]
 }
 
-### B2B order - multiple products
+### B2B order - multiple articles
 POST http://localhost:5000/api/b2b/orders
 X-API-Key: EAETubHHSRXYYwejPGZPYYgMAodeFngFtb-vF9axx6Y
 X-API-Secret: vAmYvKISehtV66JXfZYWTkJS4TwcdH_y6OCDzN96KMLHOntSkY-KHkcMyespciR2

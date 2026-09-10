@@ -1,0 +1,13 @@
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc4OTAyOTU1OSwianRpIjoiNDFmMWY5NGUtZGEwZC00YmFhLThjYmUtMDNjMjgwODIyZDU0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEwIiwibmJmIjoxNzg5MDI5NTU5LCJjc3JmIjoiMGZjMDkwNTMtYzdkMy00YzJjLTkwMTMtOTkzNDJjMTgyNjEyIiwiZXhwIjoxNzg5MDMwNDU5fQ.yx-oqa-QFDHysKih9IMqBneJvcYTqJUy8lGWTyG6aaU
+@csrfToken = 0fc09053-c7d3-4c2c-9013-99342c182612
+
+### Get all articles
+GET http://localhost:5000/api/articles
+Cookie: access_token_cookie={{accessToken}}; csrf_access_token={{csrfToken}};
+X-CSRF-TOKEN: {{csrfToken}}
+
+
+### Get article by ID
+GET http://localhost:5000/api/articles/3
+Cookie: access_token_cookie={{accessToken}}; csrf_access_token={{csrfToken}};
+X-CSRF-TOKEN: {{csrfToken}}

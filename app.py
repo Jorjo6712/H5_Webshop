@@ -9,6 +9,7 @@ from routes.auth import auth_bp
 from routes.web import web_bp
 from routes.orders import orders_bp
 from routes.b2b import b2b_bp
+from routes.article import articles_bp
 
 print(os.getenv("DB_HOST"))
 
@@ -50,6 +51,7 @@ def create_app():
     app.register_blueprint(web_bp)
     app.register_blueprint(orders_bp)
     app.register_blueprint(b2b_bp)
+    app.register_blueprint(articles_bp)
 
     return app
 

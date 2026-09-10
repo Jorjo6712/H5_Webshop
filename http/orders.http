@@ -18,7 +18,7 @@ Accept: application/json
 }
 
 
-### Create order with multiple products
+### Create order with multiple articles
 POST http://localhost:5000/api/orders
 Cookie: access_token_cookie={{accessToken}}; csrf_access_token={{csrfToken}};
 X-CSRF-TOKEN: {{csrfToken}}
